@@ -3,11 +3,22 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class Square extends React.Component {
+	constructor(props) {
+		super(props);
+
+		// State of individual component
+		this.state = {
+			value: null,
+		}
+	}
+
 	render() {
 		return (
-			// Reading parent props given
-			<button className="square">
-				{this.props.value}
+			// Setting new state for each click 
+			// .setState() updates all child components
+			// from the parent.
+			<button className="square" onClick={() => { this.setState({ value: 'X' }); }}>
+				{this.state.value}
 			</button>
 		)
 	}
