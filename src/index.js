@@ -2,32 +2,45 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+
+// "Controlled component"
 class Square extends React.Component {
-	constructor(props) {
-		super(props);
-
-		// State of individual component
-		this.state = {
-			value: null,
-		}
-	}
-
 	render() {
 		return (
-			// Setting new state for each click 
-			// .setState() updates all child components
-			// from the parent.
-			<button className="square" onClick={() => { this.setState({ value: 'X' }); }}>
-				{this.state.value}
+			// onClick is the listener
+			// onClick() is the parent's method
+			<button 
+				className="square" 
+				onClick={() => { this.props.onClick() }}
+			>
+				{this.props.value}
 			</button>
 		)
 	}
 }
 
 class Board extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			// Store all child state's value 
+			squares: Array(9).fill(null),
+		}
+	}
+
+	handleClick(i) {
+		const squares = this.state.squares.slice();
+		squares[i] = 'X';
+		this.setState({ squares: squares });
+	}
+
 	renderSquare(i) {
 		// Passing props to children
-		return <Square value={i}/>;
+		return <Square 
+			value={this.state.squares[i]}
+			onClick={() => this.handleClick(i)}
+			/>;
 	}
 
 	render() {
