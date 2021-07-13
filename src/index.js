@@ -26,13 +26,19 @@ class Board extends React.Component {
 		this.state = {
 			// Store all child state's value 
 			squares: Array(9).fill(null),
+
+			// To handle the turns
+			xIsNext: true, 
 		}
 	}
 
 	handleClick(i) {
 		const squares = this.state.squares.slice();
-		squares[i] = 'X';
-		this.setState({ squares: squares });
+		squares[i] = this.state.xIsNext ? 'X' : 'O';
+		this.setState({ 
+			squares: squares,
+			xIsNext: !this.state.xIsNext,
+		});
 	}
 
 	renderSquare(i) {
@@ -44,7 +50,7 @@ class Board extends React.Component {
 	}
 
 	render() {
-		const status = 'Next player: x';
+		const status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`;
 
 		return(
 			<div>
