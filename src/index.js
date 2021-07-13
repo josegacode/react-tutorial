@@ -3,20 +3,20 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 
-// "Controlled component"
-class Square extends React.Component {
-	render() {
+// Function component 
+// only if just need the render
+// and no props
+function Square(props) {
 		return (
 			// onClick is the listener
 			// onClick() is the parent's method
 			<button 
 				className="square" 
-				onClick={() => { this.props.onClick() }}
+				onClick={props.onClick}
 			>
-				{this.props.value}
+				{props.value}
 			</button>
 		)
-	}
 }
 
 class Board extends React.Component {
