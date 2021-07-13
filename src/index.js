@@ -5,14 +5,18 @@ import './index.css';
 class Square extends React.Component {
 	render() {
 		return (
-			<button className="square"></button>
+			// Reading parent props given
+			<button className="square">
+				{this.props.value}
+			</button>
 		)
 	}
 }
 
 class Board extends React.Component {
 	renderSquare(i) {
-		return <Square/>;
+		// Passing props to children
+		return <Square value={i}/>;
 	}
 
 	render() {
