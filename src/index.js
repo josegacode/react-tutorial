@@ -50,7 +50,13 @@ class Board extends React.Component {
 	}
 
 	render() {
-		const status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`;
+		const winner = calculateWinner(this.state.squares);
+		let status;
+		if(winner)
+			status = `Winner ${winner}`;
+		else 
+			status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+
 
 		return(
 			<div>
@@ -101,3 +107,36 @@ ReactDOM.render(
 	<Game/>,
 	document.getElementById('root')
 );
+
+function calculateWinner(squares) {
+	
+	// Represent all possible 3-line wins
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+
+	// Iterates over each possible 3-line wins
+  for (let i = 0; i < lines.length; i++) {
+
+		// Destruct a 3-line values
+    const [a, b, c] = lines[i];
+
+		// Check if there is 3-line win combination
+		// in the board
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+			
+			// The player winner, x or o
+      return squares[a];
+    }
+  }
+
+	// Else, tie
+  return null;
+}
