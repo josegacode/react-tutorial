@@ -26,7 +26,7 @@ class Board extends React.Component {
 		// which square is will be pressed.
 		return <Square 
 			value={this.props.squares[i]}
-			onClick={() => this.props.handleClick(i)}
+			onClick={() => this.props.onClick(i)}
 			/>;
 	}
 
@@ -66,12 +66,17 @@ class Game extends React.Component {
 			}],
 
 			// To handle the turns
+			stepNumber: 0,
 			xIsNext: true, 
 		}
 	}
 
 	handleClick(i) {
-		const history = this.state.history;
+		// Throws away all future movements
+		// when 'time travel' is used.
+		const history = this.state.history.slice(0,
+			this.state.stepNumber + 1);
+
 		const current = history[history.length - 1];
 		const squares = current.squares.slice();
 
@@ -80,27 +85,46 @@ class Game extends React.Component {
 		if(calculateWinner(squares) || squares[i])
 			return;
 
-		squares[i] = this.props.xIsNext ? 'X' : 'O';
+		squares[i] = this.state.xIsNext ? 'X' : 'O';
 		this.setState({ 
 			// Adds the new game state to history
 			history: history.concat([{ squares: squares	}]),
-			xIsNext: !this.props.xIsNext,
+			stepNumber: history.length,
+			xIsNext: !this.state.xIsNext,
 		});
 	}
 
+	jumpTo(step) {
+		this.setState({
+			stepNumber: step,
+
+			// As we 'x' start the 
+			// movements, each even
+			// move correspond to 'x'
+			// player.
+			xIsNext: (step % 2) === 0
+		})
+	}
 
 	render() {
 		const history = this.state.history;
-		const current = history[history.length - 1];
-		const winner = calculateWinner(this.state.squares);
+		const current = history[this.state.stepNumber];
+		const winner = calculateWinner(current.squares);
 
+		// Move is the move index taken from
+		// history array
 		const moves = history.map((step, move) => {
 			const desc = move ?
-				`Go to move #${move}`:
+				`Go to move #${move}` :
 				`Go to game start`;
 
 			return(
-				<li>
+				// A key must to be defined
+				// in order to use lists
+				// that can change (insert, delete or
+				// update items of it) and notify
+				// to react about a change.
+				<li key={move}>
 					<button onClick={() => {
 						this.jumpTo(move)
 						}}>
@@ -120,7 +144,7 @@ class Game extends React.Component {
 				<div className="game-board">
 					<Board
 						squares={current.squares}
-						onClick={(i) => this.handleClick()}
+						onClick={i => this.handleClick(i)}
 					/>
 				</div>
 
